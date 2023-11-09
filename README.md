@@ -13,7 +13,7 @@ Para empezar, sigue los siguientes pasos:
 2. Abrir el directorio del proyecto:
 
    ```bash
-   cd online-library
+   cd futbol_api
    ```
 
 3. Instalar las dependencias necesarias:
