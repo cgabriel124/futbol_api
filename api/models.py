@@ -5,7 +5,7 @@ from django.db import models
 
 class Equipo(models.Model):
     id_equipo = models.AutoField(primary_key=True)
-    nombre_equipo = models.CharField("Team name", max_length=50)
+    nombre_equipo = models.CharField(max_length=50)
     direccion = models.CharField(max_length=200)
     #logo = models.ImageField(upload_to='logos/')
     logo = models.BinaryField()
