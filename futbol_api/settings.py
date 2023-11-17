@@ -50,7 +50,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', #se agrega para que funcione el cors
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True #se agrega para que funcione el cors
 
 ROOT_URLCONF = 'futbol_api.urls'
 

@@ -3,22 +3,22 @@ from .models import Equipo, Jugador, Partido, Equipo_Partido
 
 
 class EquipoSerializer(serializers.ModelSerializer):
-    logo = serializers.ImageField()
-
+    #logo = serializers.ImageField()
     class Meta:
         model = Equipo
-        fields = ['nombre_equipo', 'direccion', 'logo', 'ciudad', 'descripcion', 'numero_jugadores']
-
+        #fields = ['nombre_equipo', 'direccion', 'logo', 'descripcion', 'numero_jugadores']
+        fields = ['nombre_equipo', 'direccion', 'descripcion', 'numero_jugadores']
+        """
     def create(self, validated_data):
         logo_file = validated_data.pop('logo')
         validated_data['logo'] = logo_file.read()
         equipo = Equipo.objects.create(**validated_data)
         return equipo
-
+        """
 class JugadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jugador
-        fields = ['nombre', 'apellidos', 'edad', 'posicion', 'equipo']
+        fields = ['nombre', 'apellido', 'ano_nacimiento', 'posicion', 'nacionalidad']
 
 class PartidoSerializer(serializers.ModelSerializer):
     class Meta:

@@ -8,10 +8,9 @@ class Equipo(models.Model):
     nombre_equipo = models.CharField(max_length=50)
     direccion = models.CharField(max_length=200)
     #logo = models.ImageField(upload_to='logos/')
-    logo = models.BinaryField()
-    ciudad = models.CharField(max_length=50)
+    ###logo = models.BinaryField(null=True, blank=True)
     descripcion = models.CharField(max_length=300)
-    numero_jugadores = models.IntegerField()
+    numero_jugadores = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -23,7 +22,7 @@ class Jugador(models.Model):
     ano_nacimiento = models.IntegerField()
     posicion = models.CharField(max_length=50)
     nacionalidad = models.CharField(max_length=50)
-    id_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+    id_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.nombre

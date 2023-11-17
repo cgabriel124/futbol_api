@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Equipo
 from rest_framework import generics
-from .serializers import EquipoSerializer
+from .serializers import *
 
 
 class EquipoCreateView(generics.CreateAPIView):
@@ -30,3 +30,8 @@ class EquipoDeleteView(generics.RetrieveAPIView):
     # Aqui se elimina un cliente por su id
     queryset = Equipo.objects.all()
     serializer_class = EquipoSerializer
+
+class JugadorCreateView(generics.CreateAPIView):
+    # Aqui se crea el jugador
+    queryset = Equipo.objects.all()
+    serializer_class = JugadorSerializer
