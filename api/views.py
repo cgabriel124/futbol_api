@@ -33,5 +33,10 @@ class EquipoDeleteView(generics.RetrieveAPIView):
 
 class JugadorCreateView(generics.CreateAPIView):
     # Aqui se crea el jugador
-    queryset = Equipo.objects.all()
+    queryset = Jugador.objects.all()
+    serializer_class = JugadorSerializer
+
+class JugadorListView(generics.ListAPIView):
+    # Aqui se listan todos los jugadores
+    queryset = Jugador.objects.all()
     serializer_class = JugadorSerializer
