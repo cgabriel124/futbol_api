@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 from .views import *
 
 urlpatterns = [
@@ -9,4 +9,6 @@ urlpatterns = [
     path('teamdelete/<int:pk>/', EquipoDeleteView.as_view(), name='delete-equipo'),
     path('playercreate/', JugadorCreateView.as_view(), name='create-jugador'),
     path('playerlist/', JugadorListView.as_view(), name='list-jugador'),
+    # endpoint para la distribucion de jugadores por equipo
+    path('teamdistribution/', team_distribution, name='distribution-team'),
 ]
