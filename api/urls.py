@@ -14,4 +14,5 @@ urlpatterns = [
     path('generatematches/', generate_matches, name='matches-generate'),
     path('getmatches/',get_partidos_info, name='get-matches'),
     path('registerresult/',RegisterMatchResult.as_view(), name='register-result'),
+    path('getteamstats/', get_equipo_stats, name='get-team-stats'),
 ]

@@ -5,13 +5,14 @@ from .models import *
 from rest_framework import generics
 from .serializers import *
 from random import shuffle
-from django.db.models import Count, Case, When, IntegerField
+from django.db.models import F, Q, Count, Case, When, IntegerField
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime, timedelta
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+
 
 class EquipoCreateView(generics.CreateAPIView):
     # Aqui se crea el equipo
@@ -77,7 +78,8 @@ def team_distribution(request):
     # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'message': 'ok'}, status=200)
 
-#test############# Borrar
+
+# test############# Borrar
 
 @api_view(['GET'])
 def get_equipo_list(request):
@@ -125,11 +127,12 @@ def generate_matches(request):
             )
 
             # Puedes imprimir o hacer otras operaciones con el partido si es necesario
-            #print(f"Partido creado: {partido}")
+            # print(f"Partido creado: {partido}")
 
     print("Creación de partidos exitosa")
     # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'message': 'ok'}, status=200)
+
 
 def get_partidos_info(request):
     # Obtener todos los partidos
@@ -153,6 +156,7 @@ def get_partidos_info(request):
 
     # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'partidos_info': partidos_info}, status=200)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterMatchResult(View):
@@ -194,3 +198,70 @@ class RegisterMatchResult(View):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+
+def get_equipo_stats(request):
+    # Obtener todos los partidos
+    partidos = Partido.objects.all()
+
+    # Crear un diccionario para almacenar la información de cada equipo
+    equipos_info = {}
+
+    # Iterar sobre los partidos y calcular los resultados para cada equipo
+    for partido in partidos:
+        # Calcular el resultado del partido
+        if partido.goles_local > partido.goles_visitante:
+            resultado = 'ganado_local'
+            equipo_ganador_id = partido.equipo_local.id_equipo
+            equipo_perdedor_id = partido.equipo_visitante.id_equipo
+        elif partido.goles_local < partido.goles_visitante:
+            resultado = 'ganado_visitante'
+            equipo_ganador_id = partido.equipo_visitante.id_equipo
+            equipo_perdedor_id = partido.equipo_local.id_equipo
+        else:
+            resultado = 'empate'
+            equipo_ganador_id = None
+            equipo_perdedor_id = None
+
+        # Actualizar la información del equipo ganador
+        if equipo_ganador_id is not None:
+            if equipo_ganador_id in equipos_info:
+                equipos_info[equipo_ganador_id]['ganados'] += 1
+            else:
+                equipos_info[equipo_ganador_id] = {'ganados': 1, 'empatados': 0, 'perdidos': 0}
+
+        # Actualizar la información del equipo perdedor
+        if equipo_perdedor_id is not None:
+            if equipo_perdedor_id in equipos_info:
+                equipos_info[equipo_perdedor_id]['perdidos'] += 1
+            else:
+                equipos_info[equipo_perdedor_id] = {'ganados': 0, 'empatados': 0, 'perdidos': 1}
+
+        # Actualizar la información en caso de empate
+        if resultado == 'empate':
+            if partido.equipo_local.id_equipo in equipos_info:
+                equipos_info[partido.equipo_local.id_equipo]['empatados'] += 1
+            else:
+                equipos_info[partido.equipo_local.id_equipo] = {'ganados': 0, 'empatados': 1, 'perdidos': 0}
+
+            if partido.equipo_visitante.id_equipo in equipos_info:
+                equipos_info[partido.equipo_visitante.id_equipo]['empatados'] += 1
+            else:
+                equipos_info[partido.equipo_visitante.id_equipo] = {'ganados': 0, 'empatados': 1, 'perdidos': 0}
+
+    # Crear una lista para almacenar la información de cada equipo
+    equipos_info_list = []
+
+    # Iterar sobre el diccionario de información de equipos y agregar a la lista
+    for equipo_id, info in equipos_info.items():
+        equipo_info = {
+            'id_equipo': equipo_id,
+            'nombre_equipo': Equipo.objects.get(id_equipo=equipo_id).nombre_equipo,
+            'ganados': info['ganados'],
+            'empatados': info['empatados'],
+            'perdidos': info['perdidos'],
+        }
+        equipos_info_list.append(equipo_info)
+
+    # Puedes ajustar el retorno según tus necesidades
+    return JsonResponse({'equipos_info': equipos_info_list}, status=200)
