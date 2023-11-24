@@ -20,7 +20,7 @@ class EquipoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipo
         # fields = ['nombre_equipo', 'direccion', 'logo', 'descripcion', 'numero_jugadores']
-        fields = ['id_equipo', 'nombre_equipo', 'direccion', 'descripcion', 'numero_jugadores', 'jugadores']
+        fields = ['id_equipo', 'nombre_equipo', 'direccion', 'logo', 'descripcion', 'numero_jugadores', 'jugadores']
         """
     def create(self, validated_data):
         logo_file = validated_data.pop('logo')

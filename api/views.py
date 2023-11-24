@@ -1,3 +1,4 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import JsonResponse
 from django.views import View
 from rest_framework.generics import ListAPIView
@@ -5,7 +6,7 @@ from .models import *
 from rest_framework import generics
 from .serializers import *
 from random import shuffle
-from django.db.models import F, Q, Count, Case, When, IntegerField
+#from django.db.models import F, Q, Count, Case, When, IntegerField
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime, timedelta
@@ -18,6 +19,16 @@ class EquipoCreateView(generics.CreateAPIView):
     # Aqui se crea el equipo
     queryset = Equipo.objects.all()
     serializer_class = EquipoSerializer
+
+    def perform_create(self, serializer):
+        # Procesar la imagen si se proporciona en la solicitud
+        logo_file = self.request.FILES.get('logo')
+        if logo_file:
+            # Puedes querer cambiar el nombre del archivo para evitar conflictos
+            serializer.validated_data['logo'] = SimpleUploadedFile(logo_file.name, logo_file.read())
+
+        # Llamar al método perform_create del padre para guardar el objeto Equipo
+        super().perform_create(serializer)
 
 
 class EquipoListView(ListAPIView):
@@ -100,6 +111,7 @@ def get_equipo_list(request):
         }
 
         data.append(equipo_data)
+    return JsonResponse({'team_data': data}, status=200)
 
 
 def generate_matches(request):
@@ -265,3 +277,5 @@ def get_equipo_stats(request):
 
     # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'equipos_info': equipos_info_list}, status=200)
+
+
