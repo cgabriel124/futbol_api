@@ -7,6 +7,7 @@ class JugadorSerializer(serializers.ModelSerializer):
         model = Jugador
         fields = ['id_jugador', 'nombre', 'apellido', 'ano_nacimiento', 'posicion', 'nacionalidad']
 
+
 class JugadorFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jugador
@@ -16,6 +17,7 @@ class JugadorFullSerializer(serializers.ModelSerializer):
 class EquipoSerializer(serializers.ModelSerializer):
     jugadores = JugadorSerializer(many=True, read_only=True)
     numero_jugadores = serializers.IntegerField()
+
     # logo = serializers.ImageField()
     class Meta:
         model = Equipo
@@ -30,12 +32,6 @@ class EquipoSerializer(serializers.ModelSerializer):
         """
 
 
-class JugadorFullSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Jugador
-        fields = '__all__'
-
-
 class JugadorCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jugador
@@ -46,12 +42,3 @@ class PartidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partido
         fields = ['fecha_partido', 'hora_partido', 'numero_goles']
-
-
-'''
-class Equipo_PartidoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Equipo_Partido
-        fields = ['id_equipo', 'id_partido', 'resultado', 'goles_ganador', 'goles_perdedor']
-
-'''

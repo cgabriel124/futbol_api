@@ -6,7 +6,7 @@ from .models import *
 from rest_framework import generics
 from .serializers import *
 from random import shuffle
-#from django.db.models import F, Q, Count, Case, When, IntegerField
+# from django.db.models import F, Q, Count, Case, When, IntegerField
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import datetime, timedelta
@@ -36,20 +36,6 @@ class EquipoListView(ListAPIView):
     serializer_class = EquipoSerializer
 
 
-# Usar a modo de prueba, en general no se usa
-class EquipoUpdateView(generics.RetrieveAPIView):
-    # Aqui se actualiza un cliente por su id
-    queryset = Equipo.objects.all()
-    serializer_class = EquipoSerializer
-
-
-# Usar a modo de prueba, en general no se usa
-class EquipoDeleteView(generics.RetrieveAPIView):
-    # Aqui se elimina un cliente por su id
-    queryset = Equipo.objects.all()
-    serializer_class = EquipoSerializer
-
-
 class JugadorCreateView(generics.CreateAPIView):
     # Aqui se crea el jugador
     queryset = Jugador.objects.all()
@@ -62,6 +48,7 @@ class JugadorListView(generics.ListAPIView):
     serializer_class = JugadorFullSerializer
 
 
+#Permite distribuir los equipos de manera equitativa.
 def team_distribution(request):
     # Obtener todos los jugadores y equipos
     jugadores = list(Jugador.objects.all())
@@ -86,11 +73,9 @@ def team_distribution(request):
         # Eliminar los jugadores asignados de la lista
         jugadores = jugadores[jugadores_por_equipo:]
     print("Distribucion de jugadores exitosa")
-    # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'message': 'ok'}, status=200)
 
 
-# test############# Borrar
 
 @api_view(['GET'])
 def get_equipo_list(request):
@@ -111,9 +96,11 @@ def get_equipo_list(request):
         }
 
         data.append(equipo_data)
+
     return JsonResponse({'team_data': data}, status=200)
 
 
+@api_view(['GET'])
 def generate_matches(request):
     # Obtener todos los equipos
     equipos = list(Equipo.objects.all())
@@ -142,10 +129,11 @@ def generate_matches(request):
             # print(f"Partido creado: {partido}")
 
     print("Creación de partidos exitosa")
-    # Puedes ajustar el retorno según tus necesidades
+
     return JsonResponse({'message': 'ok'}, status=200)
 
 
+@api_view(['GET'])
 def get_partidos_info(request):
     # Obtener todos los partidos
     partidos = Partido.objects.all()
@@ -166,7 +154,6 @@ def get_partidos_info(request):
         # Agregar la información del partido a la lista
         partidos_info.append(partido_info)
 
-    # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'partidos_info': partidos_info}, status=200)
 
 
@@ -205,7 +192,6 @@ class RegisterMatchResult(View):
             # Guardar los cambios en el modelo
             partido.save()
 
-            # Puedes ajustar el retorno según tus necesidades
             return JsonResponse({'message': 'Resultado del partido registrado exitosamente'}, status=200)
 
         except Exception as e:
@@ -275,7 +261,4 @@ def get_equipo_stats(request):
         }
         equipos_info_list.append(equipo_info)
 
-    # Puedes ajustar el retorno según tus necesidades
     return JsonResponse({'equipos_info': equipos_info_list}, status=200)
-
-

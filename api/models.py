@@ -15,6 +15,7 @@ class Equipo(models.Model):
     def __str__(self):
         return self.nombre_equipo
 
+
 class Jugador(models.Model):
     id_jugador = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
@@ -36,7 +37,6 @@ class Partido(models.Model):
     goles_visitante = models.PositiveIntegerField()
     fecha_partido = models.DateField()
     hora_partido = models.TimeField()
-
     def __str__(self):
         return self.id_partido
 
